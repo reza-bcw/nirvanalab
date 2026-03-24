@@ -190,13 +190,5 @@ That said, this setup should be treated as **conditionally healthy**, not fully 
 | Service Stability | Warning | Restart counter indicates prior failures      |
 | Environment Type  | Note    | VM-based, not bare metal                      |
 
----
 
-## Recommended Next Steps
-
-* Review `journalctl` around the earlier failures to determine why the service restarted.
-* Inspect IRQ affinity / CPU pinning / thread distribution to understand CPU0 saturation.
-* Continue monitoring memory peak and account-index growth over longer runtime windows.
-* Plan ahead for `/data` growth if transaction history remains enabled.
-* Repeat the same test on bare metal if this server is being evaluated for production-grade Solana deployment.
 
