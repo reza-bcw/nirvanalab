@@ -378,3 +378,128 @@ This suggests that:
 ```
 
 
+# MTR TCP Path Comparison Report
+## NirvanaLab vs Latitude
+
+
+```bash
+sudo mtr --tcp 8.8.8.8
+````
+
+This report compares the observed TCP path behavior from:
+
+* **NirvanaLab**
+* **Latitude**
+
+toward `8.8.8.8`.
+
+### nirvanalab
+![](img/mtr_nirvanaa.png)
+
+### latitude
+![](img/mtr_lstitufr.png)
+
+
+
+
+
+
+## 2) Summary
+
+| Metric                      | NirvanaLab                                   | Latitude                                        | Initial Assessment                       |
+| --------------------------- | -------------------------------------------- | ----------------------------------------------- | ---------------------------------------- |
+| Local gateway health        | Clean                                        | Clean                                           | Both healthy at source                   |
+| Early-hop latency           | Low                                          | Low                                             | Both good                                |
+| Intermediate anomaly        | One hop with **51.2% loss**                  | One hop with **extreme latency/jitter**         | Both show one abnormal transit response  |
+| Last visible responding hop | Stable                                       | Stable before noisy transit hop                 | No immediate proof of end-to-end failure |
+| Overall path quality        | Generally clean with one suspicious-loss hop | Generally clean with one suspicious-latency hop | Mixed                                    |
+
+---
+
+## 3) NirvanaLab Results
+
+### Observed Path
+
+| Hop | Host                            |      Loss |    Avg |   Best |   Worst | StDev |
+| --- | ------------------------------- | --------: | -----: | -----: | ------: | ----: |
+| 1   | `_gateway`                      |      0.0% | 0.4 ms | 0.3 ms |  0.8 ms |   0.1 |
+| 2   | `172.240.229.140`               |      0.0% | 2.0 ms | 1.2 ms | 21.0 ms |   2.9 |
+| 3   | `172.240.223.0`                 | **51.2%** | 1.5 ms | 1.3 ms |  1.9 ms |   0.2 |
+| 4   | `172.240.220.210 / 172.220.229` |      0.0% | 5.3 ms | 1.4 ms | 56.3 ms |  12.3 |
+| 5   | `142.251.200.34`                |      0.0% | 1.7 ms | 1.4 ms |  2.8 ms |   0.2 |
+
+### Assessment
+
+* Local gateway is healthy.
+* Early path latency is low.
+* One intermediate hop shows **51.2% TCP-probe loss**.
+* Later visible hop responses continue with **0.0% loss**.
+* Path appears generally usable, with one suspicious intermediate-loss point.
+
+---
+
+## 4) Latitude Results
+
+### Observed Path
+
+| Hop | Host                                                           | Loss |          Avg |   Best |       Worst |    StDev |
+| --- | -------------------------------------------------------------- | ---: | -----------: | -----: | ----------: | -------: |
+| 1   | `_gateway`                                                     | 0.0% |       0.6 ms | 0.4 ms |      1.8 ms |      0.2 |
+| 2   | `10.10.202.89 / 10.10.202.97`                                  | 0.0% |       0.4 ms | 0.4 ms |      0.7 ms |      0.1 |
+| 3   | `10.10.202.0`                                                  | 0.0% |       0.5 ms | 0.2 ms |      5.1 ms |      0.9 |
+| 4   | `ash-b6-link.ip.twelve99.net`                                  | 0.0% |       4.6 ms | 1.7 ms |     22.3 ms |      5.0 |
+| 5   | `rest-bb1-link.ip.twelve99.net / ash-bb2-link.ip.twelve99.net` | 0.0% |       1.1 ms | 0.9 ms |      4.7 ms |      0.7 |
+| 6   | `ash-b2-link.ip.twelve99.net`                                  | 0.0% | **432.7 ms** | 0.5 ms | **5158 ms** | **1122** |
+
+### Assessment
+
+* Local gateway is healthy.
+* Early path latency is low.
+* One transit hop shows **extreme TCP-probe latency and jitter**.
+* No visible packet loss is shown on the responding hops.
+* Path appears generally usable, with one suspicious intermediate-latency point.
+
+---
+
+## 5) Comparative View
+
+| Category                         | NirvanaLab     | Latitude       |
+| -------------------------------- | -------------- | -------------- |
+| Gateway condition                | Healthy        | Healthy        |
+| Early path stability             | Good           | Good           |
+| Intermediate packet loss         | Higher concern | Lower concern  |
+| Intermediate latency anomaly     | Lower concern  | Higher concern |
+| Clear end-to-end failure visible | No             | No             |
+
+---
+
+## 6) Conclusion
+
+Based on the observed `mtr --tcp` output to `8.8.8.8`:
+
+* **NirvanaLab** shows one intermediate hop with significant visible TCP-probe loss.
+* **Latitude** shows one intermediate hop with severe visible TCP-probe latency/jitter.
+* Both paths appear healthy near the source.
+* Neither result alone proves a hard end-to-end connectivity failure.
+
+### Final Comparison
+
+| Area                             | Better         |
+| -------------------------------- | -------------- |
+| Intermediate loss behavior       | **Latitude**   |
+| Intermediate latency consistency | **NirvanaLab** |
+| Local/early path health          | Tie            |
+
+### Final Statement
+
+The `mtr --tcp` results indicate that both paths are operational, but each shows one notable intermediate-path anomaly:
+
+* **NirvanaLab:** suspicious intermediate loss point
+* **Latitude:** suspicious intermediate latency/jitter point
+
+
+
+
+
+
+
