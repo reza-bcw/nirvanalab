@@ -473,8 +473,6 @@ toward `8.8.8.8`.
 
 ---
 
-## 6) Conclusion
-
 Based on the observed `mtr --tcp` output to `8.8.8.8`:
 
 * **NirvanaLab** shows one intermediate hop with significant visible TCP-probe loss.
@@ -482,20 +480,7 @@ Based on the observed `mtr --tcp` output to `8.8.8.8`:
 * Both paths appear healthy near the source.
 * Neither result alone proves a hard end-to-end connectivity failure.
 
-### Final Comparison
 
-| Area                             | Better         |
-| -------------------------------- | -------------- |
-| Intermediate loss behavior       | **Latitude**   |
-| Intermediate latency consistency | **NirvanaLab** |
-| Local/early path health          | Tie            |
-
-### Final Statement
-
-The `mtr --tcp` results indicate that both paths are operational, but each shows one notable intermediate-path anomaly:
-
-* **NirvanaLab:** suspicious intermediate loss point
-* **Latitude:** suspicious intermediate latency/jitter point
 
 
 
