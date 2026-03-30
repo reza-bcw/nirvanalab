@@ -325,37 +325,6 @@ This suggests that:
 - there may be congestion, policing, shaping, or packet loss on the path,
 - and more network validation should be performed before treating this as an optimal path.
 
----
-
-## Final Assessment
-
-| Category | Winner |
-|---|---|
-| Aggregate throughput | **Latitude** |
-| Receiver throughput | **Latitude** |
-| Retransmission behavior | **Latitude** |
-| Delivery efficiency | **Latitude** |
-
-### Final statement
-For this `iperf3` comparison, **Latitude is the stronger network path**.  
-NirvanaLab remains functional, but it shows a higher retransmission rate and slightly weaker effective throughput.
-
----
-
-## Recommended Next Steps
-
-1. Run the same test in reverse using:
-   - `iperf3 -c <peer> -P 8 -t 30 -R`
-2. Run a single-stream comparison:
-   - `iperf3 -c <peer> -P 1 -t 30`
-3. Run `mtr` between the two servers in both directions.
-4. Repeat the test at multiple times of day to detect congestion windows.
-5. If retransmissions remain high, inspect:
-   - firewall path,
-   - cloud network path,
-   - MTU mismatch,
-   - NIC offload configuration,
-   - intermediate loss or shaping.
 
 
 
