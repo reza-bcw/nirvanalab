@@ -4,9 +4,9 @@ We have conducted a series of benchmark tests to evaluate the performance delta 
 ### The primary variable in this comparison is the storage architecture:
 
 Our Current Infrastructure: Utilizes Direct Attached Storage (DAS) via the PCIe bus/Motherboard. This eliminates network overhead and provides the lowest possible latency.
-Tested Infrastructure: Utilizes Network-Based Storage. Data traversal occurs over a network fabric, introducing encapsulation and switching overhead.
+Tested Infrastructure: Utilizes Network Based Storage. Data traversal occurs over a network fabric, introducing encapsulation and switching overhead.
 3. Objective of the Analysis
-The goal of these tests—accompanied by the attached screenshots and output logs—is not merely to confirm that local storage is faster, but to quantify the performance gap. We aim to measure how the transition from a local PCIe interface to a networked environment impacts:
+The goal of these tests accompanied by the attached screenshots and output logs is not merely to confirm that local storage is faster, but to quantify the performance gap. We aim to measure how the transition from a local PCIe interface to a networked environment impacts:
 
 # Storage Performance Comparison Report
 ## Latitude vs NirvanaLab
