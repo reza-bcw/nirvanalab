@@ -94,6 +94,10 @@ Latitude delivered a substantially stronger latency profile:
 
 This indicates a far more responsive and stable storage path for the workload volume.
 
+![](img/lati_ioping.png)
+
+![](img/nirvana_ioping.png)
+
 ---
 
 ## 5.2 `iostat` Comparison
