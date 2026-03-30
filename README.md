@@ -156,9 +156,6 @@ Host-level burst behavior over the sampling window.
 `dstat` reflects total host-level disk behavior and captures short-lived bursts.  
 In this data set, **NirvanaLab showed significantly larger burst spikes**, especially on writes.
 
-However, this does **not** mean NirvanaLab has the better storage platform.  
-When correlated with `ioping` and `iostat`, the evidence suggests:
-
 - NirvanaLab experiences larger burst behavior
 - but its target storage path (`vdb` / `/data`) is less responsive and less consistent
 - while Latitude sustains heavier workload more efficiently on the target data volume
@@ -190,6 +187,12 @@ Application-level view focused on `agave-validator`.
 The `agave-validator` workload on Latitude is pushing more I/O than on NirvanaLab, yet the primary device still demonstrates better latency and stronger sustained throughput.
 
 This is an indicator that Latitude has **more operational storage headroom** for the workload.
+
+### nirvanalab
+![](img/nirvana_iotop.png)
+
+### latitude
+![](img/lati_iotop.png)
 
 ---
 
