@@ -218,3 +218,194 @@ Operationally, NirvanaLab appears more sensitive to burst pressure and shows a l
 
 
 
+
+
+
+## Network Throughput Comparison
+A network performance test was conducted using iperf3 to measure the throughput between the two datacenters. The results for each environment are documented below:
+
+### Latitude vs NirvanaLab (`iperf3 -P 8 -t 30`)
+
+### Test profile
+The following comparison is based on parallel TCP throughput tests using:
+
+- `iperf3`
+- `8 parallel streams` (`-P 8`)
+- `30 second duration` (`-t 30`)
+
+This is a live end-to-end network test and reflects real path behavior at the time of measurement.
+
+---
+
+## Summary Table
+
+| Metric | NirvanaLab | Latitude | Better |
+|---|---:|---:|---|
+| Sender transfer | 195 MB | **203 MB** | **Latitude** |
+| Sender bitrate | 54.5 Mbit/s | **56.8 Mbit/s** | **Latitude** |
+| Receiver transfer | 172 MB | **182 MB** | **Latitude** |
+| Receiver bitrate | 47.7 Mbit/s | **50.7 Mbit/s** | **Latitude** |
+| Total retransmissions | 9695 | **6488** | **Latitude** |
+| Receiver/Sender efficiency | 87.5% | **89.3%** | **Latitude** |
+
+---
+
+## Stream-Level Comparison
+
+| Stream | NirvanaLab Sender | Latitude Sender | Better |
+|---|---:|---:|---|
+| 1 | 5.10 Mbit/s | **10.2 Mbit/s** | **Latitude** |
+| 2 | 2.62 Mbit/s | **6.29 Mbit/s** | **Latitude** |
+| 3 | **10.6 Mbit/s** | 8.42 Mbit/s | **NirvanaLab** |
+| 4 | **6.50 Mbit/s** | 4.75 Mbit/s | **NirvanaLab** |
+| 5 | 7.58 Mbit/s | **8.77 Mbit/s** | **Latitude** |
+| 6 | **8.25 Mbit/s** | 7.69 Mbit/s | **NirvanaLab** |
+| 7 | **7.48 Mbit/s** | 6.19 Mbit/s | **NirvanaLab** |
+| 8 | **6.33 Mbit/s** | 4.54 Mbit/s | **NirvanaLab** |
+
+### Observation
+Latitude delivered the better **aggregate throughput**, while NirvanaLab had a few stronger individual streams.  
+This usually indicates that Latitude handled the parallel session set more efficiently overall.
+
+---
+
+## Retransmission Analysis
+
+| Metric | NirvanaLab | Latitude |
+|---|---:|---:|
+| Total retransmissions | 9695 | 6488 |
+| Retransmissions per second | 323.2/s | 216.3/s |
+| Relative difference | baseline | **~33% fewer retransmissions** |
+
+### Interpretation
+Latitude showed a clearly better retransmission profile.
+
+A lower retransmission count generally indicates:
+- less packet loss,
+- less congestion,
+- better path stability,
+- or better queue behavior somewhere along the route.
+
+NirvanaLab’s retransmission count is materially higher, which suggests the path experienced more loss or congestion during the test window.
+
+---
+
+## Efficiency Analysis
+
+| Metric | NirvanaLab | Latitude |
+|---|---:|---:|
+| Sender bitrate | 54.5 Mbit/s | 56.8 Mbit/s |
+| Receiver bitrate | 47.7 Mbit/s | 50.7 Mbit/s |
+| Delivery efficiency | 87.5% | 89.3% |
+
+### Interpretation
+Latitude not only sent more traffic, but also delivered a larger proportion of that traffic successfully to the receiving side.
+
+This is a useful indicator that the Latitude path was slightly cleaner and more efficient during the test.
+
+---
+
+## Operational Conclusion
+
+Based on this `iperf3` test:
+
+> **Latitude showed better network performance than NirvanaLab in this measurement window.**
+
+### Why Latitude is ahead
+- higher aggregate sender throughput,
+- higher aggregate receiver throughput,
+- fewer retransmissions,
+- slightly better end-to-end delivery efficiency.
+
+### Important note
+That said, both paths still show a **non-trivial retransmission level**, especially for a 30-second TCP test with 8 parallel streams.
+
+This suggests that:
+- the route is not completely clean,
+- there may be congestion, policing, shaping, or packet loss on the path,
+- and more network validation should be performed before treating this as an optimal path.
+
+---
+
+## Final Assessment
+
+| Category | Winner |
+|---|---|
+| Aggregate throughput | **Latitude** |
+| Receiver throughput | **Latitude** |
+| Retransmission behavior | **Latitude** |
+| Delivery efficiency | **Latitude** |
+
+### Final statement
+For this `iperf3` comparison, **Latitude is the stronger network path**.  
+NirvanaLab remains functional, but it shows a higher retransmission rate and slightly weaker effective throughput.
+
+---
+
+## Recommended Next Steps
+
+1. Run the same test in reverse using:
+   - `iperf3 -c <peer> -P 8 -t 30 -R`
+2. Run a single-stream comparison:
+   - `iperf3 -c <peer> -P 1 -t 30`
+3. Run `mtr` between the two servers in both directions.
+4. Repeat the test at multiple times of day to detect congestion windows.
+5. If retransmissions remain high, inspect:
+   - firewall path,
+   - cloud network path,
+   - MTU mismatch,
+   - NIC offload configuration,
+   - intermediate loss or shaping.
+
+
+
+
+### Nirvana
+```bash
+[ ID] Interval           Transfer     Bitrate         Retr
+[  5]   0.00-30.00  sec  18.2 MBytes  5.10 Mbits/sec  1062            sender
+[  5]   0.00-30.20  sec  14.9 MBytes  4.13 Mbits/sec                  receiver
+[  7]   0.00-30.00  sec  9.38 MBytes  2.62 Mbits/sec  514            sender
+[  7]   0.00-30.20  sec  8.00 MBytes  2.22 Mbits/sec                  receiver
+[  9]   0.00-30.00  sec  38.0 MBytes  10.6 Mbits/sec  2319            sender
+[  9]   0.00-30.20  sec  34.6 MBytes  9.62 Mbits/sec                  receiver
+[ 11]   0.00-30.00  sec  23.2 MBytes  6.50 Mbits/sec  928            sender
+[ 11]   0.00-30.20  sec  20.2 MBytes  5.62 Mbits/sec                  receiver
+[ 13]   0.00-30.00  sec  27.1 MBytes  7.58 Mbits/sec  935            sender
+[ 13]   0.00-30.20  sec  23.2 MBytes  6.46 Mbits/sec                  receiver
+[ 15]   0.00-30.00  sec  29.5 MBytes  8.25 Mbits/sec  1249            sender
+[ 15]   0.00-30.20  sec  26.8 MBytes  7.43 Mbits/sec                  receiver
+[ 17]   0.00-30.00  sec  26.8 MBytes  7.48 Mbits/sec  1848            sender
+[ 17]   0.00-30.20  sec  23.9 MBytes  6.63 Mbits/sec                  receiver
+[ 19]   0.00-30.00  sec  22.6 MBytes  6.33 Mbits/sec  840            sender
+[ 19]   0.00-30.20  sec  20.0 MBytes  5.56 Mbits/sec                  receiver
+[SUM]   0.00-30.00  sec   195 MBytes  54.5 Mbits/sec  9695             sender
+[SUM]   0.00-30.20  sec   172 MBytes  47.7 Mbits/sec                  receiver
+
+```
+
+### Latitude
+```bash
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bitrate         Retr
+[  5]   0.00-30.00  sec  36.4 MBytes  10.2 Mbits/sec  1264            sender
+[  5]   0.00-30.13  sec  32.5 MBytes  9.05 Mbits/sec                  receiver
+[  7]   0.00-30.00  sec  22.5 MBytes  6.29 Mbits/sec  793            sender
+[  7]   0.00-30.13  sec  19.9 MBytes  5.53 Mbits/sec                  receiver
+[  9]   0.00-30.00  sec  30.1 MBytes  8.42 Mbits/sec  1123            sender
+[  9]   0.00-30.13  sec  26.4 MBytes  7.34 Mbits/sec                  receiver
+[ 11]   0.00-30.00  sec  17.0 MBytes  4.75 Mbits/sec  572            sender
+[ 11]   0.00-30.13  sec  15.9 MBytes  4.42 Mbits/sec                  receiver
+[ 13]   0.00-30.00  sec  31.4 MBytes  8.77 Mbits/sec  771            sender
+[ 13]   0.00-30.13  sec  29.5 MBytes  8.21 Mbits/sec                  receiver
+[ 15]   0.00-30.00  sec  27.5 MBytes  7.69 Mbits/sec  793            sender
+[ 15]   0.00-30.13  sec  24.1 MBytes  6.72 Mbits/sec                  receiver
+[ 17]   0.00-30.00  sec  22.1 MBytes  6.19 Mbits/sec  787            sender
+[ 17]   0.00-30.13  sec  18.6 MBytes  5.19 Mbits/sec                  receiver
+[ 19]   0.00-30.00  sec  16.2 MBytes  4.54 Mbits/sec  385            sender
+[ 19]   0.00-30.13  sec  15.2 MBytes  4.25 Mbits/sec                  receiver
+[SUM]   0.00-30.00  sec   203 MBytes  56.8 Mbits/sec  6488             sender
+[SUM]   0.00-30.13  sec   182 MBytes  50.7 Mbits/sec                  receiver
+```
+
+
