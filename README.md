@@ -163,6 +163,12 @@ When correlated with `ioping` and `iostat`, the evidence suggests:
 - but its target storage path (`vdb` / `/data`) is less responsive and less consistent
 - while Latitude sustains heavier workload more efficiently on the target data volume
 
+### nirvanalab
+![](img/nirvana_dstat.png)
+
+### latitude
+![](img/lati_dstat.png)
+
 ---
 
 ## 5.4 `iotop` Comparison
@@ -207,38 +213,5 @@ Observations:
 
 Operationally, NirvanaLab appears more sensitive to burst pressure and shows a less consistent storage response on the primary workload volume.
 
----
 
-## 7) Conclusion
 
-Based on the collected live measurements across `ioping`, `iostat`, `dstat`, and `iotop`:
-
-> **Latitude provides the stronger storage environment for the active workload.**
-
-### Final assessment
-- **Latency winner:** Latitude
-- **Sustained throughput winner:** Latitude
-- **Write consistency winner:** Latitude
-- **Operational storage headroom winner:** Latitude
-- **Burst intensity observed:** NirvanaLab
-
-### Final statement
-While NirvanaLab exhibited larger burst write activity at the host level, the underlying target data device (`vdb` / `/data`) did not match the responsiveness, throughput, or consistency delivered by Latitude’s `md1` array.
-
-For production storage behavior under the current Agave workload, **Latitude is the better-performing datacenter in this comparison**.
-
----
-
-## 8) Recommended Next Steps
-
-1. Run a controlled `fio` benchmark on both primary data paths for apples-to-apples synthetic validation.
-2. Record device utilization and latency during validator-heavy events such as snapshots, catch-up, and ledger compaction.
-3. Continue monitoring:
-   - `r_await`
-   - `w_await`
-   - `%util`
-   - queue depth (`aqu-sz`)
-   - `agave-validator` write bursts
-4. Review free space and filesystem health on NirvanaLab `/data`, since high fill levels can worsen write behavior over time.
-
----
