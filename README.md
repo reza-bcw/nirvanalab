@@ -59,19 +59,6 @@ Accordingly, this report reflects **real workload behavior**, which is often mor
 
 ---
 
-## 4) High-Level Summary
-
-| Area | Better Result | Summary |
-|---|---|---|
-| Storage latency | **Latitude** | Much lower average latency and far tighter latency spread |
-| Sustained read throughput | **Latitude** | Significantly higher sustained read rates on the target data device |
-| Sustained write throughput | **Latitude** | Significantly higher sustained write rates on the target data device |
-| Write consistency under load | **Latitude** | Better write latency despite handling heavier throughput |
-| Host-level burst spikes | **NirvanaLab** | Larger short-term burst spikes were observed, especially on writes |
-| Application I/O handled by Agave | **Latitude** | Higher Agave I/O observed without corresponding degradation in device latency |
-
----
-
 ## 5) Detailed Results
 
 ## 5.1 `ioping` Comparison
@@ -140,6 +127,18 @@ Latitude is not merely “busier”; it is **handling materially more read and w
 This is the most important finding in the report:
 
 > **Latitude sustained much higher storage throughput at better latency than NirvanaLab on the primary workload path.**
+
+### nirvanalab
+![](img/nirvana_iostate.png)
+
+![](img/nirvana_iostate2.png)
+
+
+### latitude
+![](img/lati_iostat.png)
+
+![](img/lati_iostat2.png)
+
 
 ---
 
